@@ -1,21 +1,25 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package trabalho1_marcospietrucci;
 
 /**
- *
- * @author marco
+ * Classe que define os invasores, sendo filha de "Elemento"
+ * @author Marcos Pietrucci
+ * @since Oct 2020
  */
 public class Invasor extends Elemento{
     
-    //0 é mover para direita, 1 mover para esquerda;
+    /** 0: mover para direita
+       1: mover para esquerda
+    */
     private int direcao;
     
-    //0 para invasor andar em linha reta, 1 para se descer
+    /** 0: invasor anda em linha reta
+       1: invasor desce 1 linha
+    */
     private int descer;
+    
+    /** Controla a mudança do caractere do invasor */
+    private boolean alt_simbol = false;
+    private final char simbol2 = '$';
     
     
     Invasor(int x, int y, char simbol, int vidas, int velocidade, int direcao)
@@ -24,11 +28,38 @@ public class Invasor extends Elemento{
         this.direcao = direcao;
     }
     
+    /**
+     * Método que retorna a atual direção do invasor
+     * @return direcao int - Se 0, o invasor está andando para a direita; Se 1, o invasor está andando para a esquerda
+     */
     public int getDirecao()
     {
         return this.direcao;
     }
     
+    
+    /**
+     * Método que retorna um símbolo para o invasor. Existem 2 símbolos diferentes que alternam entre si.
+     * @return simbol char - Retorna um símbolo que representa o invasor na tela. Existem 2 símbolos diferentes que se alternam entre si
+     */
+    @Override
+    public char getSimbol()
+    {
+        /* Decidi fazer esta alternância para simular o movimento que os invasores fazem, ao se moverem, no jogo original */
+        this.alt_simbol = !this.alt_simbol;
+        if(this.alt_simbol)
+        {
+            return this.simbol;
+        }
+        else
+            return this.simbol2;
+    }
+    
+    /**
+     * Método que inverte o sentido de movimento do invasor ao inverter o valor da variável direcao. Além disso, este método programa o invasor
+     * para se aproximar uma unidade do canhão.
+     * 
+     */
     public void inverteSentido()
     {
         //Mudar de direcao significa que o invasor deve descer um degrau
@@ -43,18 +74,11 @@ public class Invasor extends Elemento{
         
         this.x++;
         
-    }
-    
-    
+    }    
     
     /**
-     * Método que aumenta a velocidade dos invasores
+     * Método que efetivamente atualiza a posição do invasor 
      */
-    public void aumentaVelocidade()
-    {
-    
-    }
-    
     public void move()
     {   
         if(this.descer == 1)
@@ -72,8 +96,6 @@ public class Invasor extends Elemento{
                 case 1: this.y -= this.velocidade;
                         break;
             } 
-        }
-            
-        
+        } 
     }
 }

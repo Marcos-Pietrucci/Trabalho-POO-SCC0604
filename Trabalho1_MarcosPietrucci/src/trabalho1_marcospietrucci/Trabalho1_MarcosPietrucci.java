@@ -2,7 +2,7 @@ package trabalho1_marcospietrucci;
 
 /**
  * Classe principal
- * @author marco
+ * @author Marcos Pietrucci
  * @since Oct 2020
  */
 public class Trabalho1_MarcosPietrucci {
@@ -12,14 +12,20 @@ public class Trabalho1_MarcosPietrucci {
      */
     public static void main(String[] args) {
        
+        
         interfaceTexto it = new interfaceTexto();
         
-        try{
+        try
+        {
             it.iniciaJogo();
         }
         catch(InterruptedException E)
         {
             System.out.println("Erro "+ E.getMessage());
+        }
+        catch(Error E)
+        {
+            System.out.println("Um erro inesperado ocorreu: "+ E.getMessage());
         }
 
     }

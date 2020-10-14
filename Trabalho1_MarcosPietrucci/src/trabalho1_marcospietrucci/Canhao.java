@@ -1,44 +1,34 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package trabalho1_marcospietrucci;
 
 /**
- *
- * @author marco
+ * Classe que define o canhão controlado pelo jogador 
+ * @author Marcos Pietrucci
+ * @since Oct 2020
  */
 public class Canhao extends Elemento {
     
-    //0 para a direita, 1 para a esquerda
-    private int direcao;
+    private int pontos;
     
     Canhao(int x, int y, char simbol, int vidas, int velocidade)
     {
         super(x,y,simbol,vidas,velocidade);
+        pontos = 0;
     }
     
-    
-    public void setDirecao(int direcao)
+    /**
+     * Método que retorna os pontos do canhão
+     * @return pontos - Pontos do jogador
+     */
+    public int getPontos()
     {
-        this.direcao = direcao;
+        return this.pontos;
     }
     
-    public int getDirecao()
+    /**
+     * Método que aumenta em uma unidade os pontos do jogador
+     */
+    public void aumentaPontos()
     {
-        return this.direcao;
+        this.pontos++;
     }
-    
-    
-    public void move(int direcao)
-    {               
-        switch (direcao)
-        {
-            case 0: this.y += this.velocidade;
-            
-            case 1: this.y -= this.velocidade;
-        } 
-    }
-    
 }
