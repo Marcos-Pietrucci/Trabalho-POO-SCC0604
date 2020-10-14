@@ -1,1 +1,6 @@
  - Apenas o básico de documentação já é o suficiente?
+
+- Sobre o UML
+	- Falar que gerei pela ferramenta de "Reverse code"
+	- Tem problema o símbolo de agregação ser diferente?
+	- Arraylist é atributo?
