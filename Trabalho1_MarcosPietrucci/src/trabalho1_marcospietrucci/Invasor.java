@@ -71,9 +71,6 @@ public class Invasor extends Elemento{
         }
         else
             this.direcao = 1;
-        
-        this.x++;
-        
     }    
     
     /**

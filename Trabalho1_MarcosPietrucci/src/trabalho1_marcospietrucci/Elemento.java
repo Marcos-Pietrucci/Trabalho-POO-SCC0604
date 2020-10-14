@@ -1,7 +1,7 @@
 package trabalho1_marcospietrucci;
 
 /**
- * Classe mãe de todos os elementos do jogo: Nave, tiros, inimigos e barreiras
+ * Classe mãe de todos os elementos do jogo: Insavor, canhão, tiro e barreira 
  * @author Marcos Pietrucci
  * @since Oct 2020
  */
@@ -24,8 +24,8 @@ public abstract class Elemento {
     
     /**
      * Método que seta a atual posição do elemento
-     * @param x
-     * @param y
+     * @param x int - Posição X do elemento na matriz da tela 
+     * @param y int - Posição Y do elemento na matriz da tela
      */
     public final void setPos(int x, int y)
     {
@@ -35,7 +35,7 @@ public abstract class Elemento {
     
     /**
      * Método que seta a quantidade de vidas
-     * @param vidas - Seta a quantidade de vidas do elemento
+     * @param vidas int - Seta a quantidade de vidas do elemento
      */
     public final void setVida(int vidas)
     {

@@ -49,14 +49,12 @@ public class interfaceTexto{
         
         while(jogo)
         {
-            //Core loop do jogo
+           //Core loop do jogo
            processaMovimento();
            cls();
            escreve_tela();
         }
-        
-        cls();
-        
+                
         System.out.println("Você foi derrotado, sua pontuação foi de: " + player.getPontos());
     }
 
@@ -183,16 +181,17 @@ public class interfaceTexto{
     /** Método responsável por limpar o console
      * @throws InterruptedException - Por conta do comando Thread.sleep
      */
-    private void cls() throws InterruptedException 
+    private void cls() throws InterruptedException
     {
         int i,j;
-        System.out.println("\n\n\n");       
+        
+        //Dando este sleep causa o efeito de refresh
+        Thread.sleep(500); 
         
         //Além disso devo limpar a matriz tela
         for(i = 0; i < tamX; i++)
             for(j = 0; j< tamY; j++)
                 tela[i][j] = (char) 0;
         
-        Thread.sleep(500);
     }
 }

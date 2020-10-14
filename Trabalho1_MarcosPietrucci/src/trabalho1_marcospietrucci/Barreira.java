@@ -1,7 +1,7 @@
 package trabalho1_marcospietrucci;
 
 /**
- * Classe que definem as barreiras que defendem o canhão
+ * Classe que define as barreiras que defendem o canhão
  * @author Marcos Pietrucci
  * @since Oct 2020
  */
