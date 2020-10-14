@@ -1,5 +1,5 @@
-
 package trabalho1_marcospietrucci;
+import java.util.ArrayList;
 
 /**
  * Classe mãe de todos os elementos do jogo: Nave, tiros, inimigos e barreiras
@@ -44,6 +44,7 @@ public abstract class Elemento {
         this.vidas = vidas;
     }
     
+    
     /**
      * Método que retorna a quantidade atual de vidas
      * @return vidas
@@ -59,7 +60,7 @@ public abstract class Elemento {
      */
     public final char getSimbol()
     {
-        return this.simbol;
-                
+        return this.simbol;     
     }
+   
 }
