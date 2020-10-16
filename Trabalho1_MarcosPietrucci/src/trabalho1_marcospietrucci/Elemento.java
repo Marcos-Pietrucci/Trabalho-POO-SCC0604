@@ -34,20 +34,10 @@ public abstract class Elemento {
     }
     
     /**
-     * Método que seta a quantidade de vidas
-     * @param vidas int - Seta a quantidade de vidas do elemento
+     * Método que retorna a quantidade de vidas do elemento
+     * @return vidas int - Quantidade de vidas restantes
      */
-    public final void setVida(int vidas)
-    {
-        this.vidas = vidas;
-    }
-    
-    
-    /**
-     * Método que retorna a quantidade atual de vidas
-     * @return vidas int - Número de vidas do elemento
-     */
-    public final int getVidas()
+    public int getVidas()
     {
         return this.vidas;
     }
@@ -60,5 +50,13 @@ public abstract class Elemento {
     {
         return this.simbol;     
     }
-   
+    
+    /**
+     * Método que remove uma vida deste elemento
+     */
+    public void removeVida()
+    {
+        this.vidas--;
+    }
+
 }

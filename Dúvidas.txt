@@ -1,6 +1,11 @@
  - Apenas o básico de documentação já é o suficiente?
 
+
 - Sobre o UML
 	- Falar que gerei pela ferramenta de "Reverse code"
 	- Tem problema o símbolo de agregação ser diferente?
 	- Arraylist é atributo?
+
+-Métodos e funcionalidades que eu não vou implementar precisam estar ali?
+	- Por exemplo, colisão entre tiros e aliens
+	- Tiros de aliens

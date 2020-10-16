@@ -6,22 +6,27 @@ import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.Clip;
 
 /**
- * Classe responsável por gerenciar músicas e possíveis efeitos sonoros
+ * Classe responsável por gerenciar músicas e efeitos sonoros
  * @author Marcos Pietrucci
  * @since Oct 2020
  */
 public class Musica {
-        
-    /** Método que inicia a música tema em loop
+
+    AudioInputStream musica;
+    Clip clip;
+    
+    /**
+     * Método que inicia a música tema em loop
      */
-    public void startTheme()
+    public void iniciaTheme()
     {        
         try
         {
             /* Queria criar uma pasta separada para a música, mas o formato de indexação de arquivos do Windows é diferente do Mac e do Linux */
             /* Então tive que deixar o arquivo na raiz do projeto, para garantir que funcione */
-            AudioInputStream musica = AudioSystem.getAudioInputStream(new File("theme2.wav"));
-            Clip clip = AudioSystem.getClip();
+            musica = AudioSystem.getAudioInputStream(new File("theme2.wav"));
+            clip = AudioSystem.getClip();
+            
             clip.open(musica);
             clip.start();
             clip.loop(Clip.LOOP_CONTINUOUSLY);
@@ -30,5 +35,48 @@ public class Musica {
         {
             System.out.println("Erro ao tocar a música: " + e.getMessage());
         }
+    }
+    
+    /**
+     * Método que toca o efeito sonoro do tiro do canhão
+     */
+    public void tiro()
+    {
+        try
+        {
+            /* Queria criar uma pasta separada para a música, mas o formato de indexação de arquivos do Windows é diferente do Mac e do Linux */
+            /* Então tive que deixar o arquivo na raiz do projeto, para garantir que funcione */
+            musica = AudioSystem.getAudioInputStream(new File("tiro.wav"));
+            clip = AudioSystem.getClip();
+            
+            clip.open(musica);
+            clip.start();
+        }
+        catch(Exception e)
+        {
+            System.out.println("Erro ao tocar a música: " + e.getMessage());
+        }
+    }
+    
+    /**
+     * Método que toca o efeito sonoro do invasor sendo destruído
+     */
+    public void destruiInvasor()
+    {
+        try
+        {
+            /* Queria criar uma pasta separada para a música, mas o formato de indexação de arquivos do Windows é diferente do Mac e do Linux */
+            /* Então tive que deixar o arquivo na raiz do projeto, para garantir que funcione */
+            musica = AudioSystem.getAudioInputStream(new File("invader.wav"));
+            clip = AudioSystem.getClip();
+            
+            clip.open(musica);
+            clip.start();
+        }
+        catch(Exception e)
+        {
+            System.out.println("Erro ao tocar a música: " + e.getMessage());
+        }
+    
     }
 }

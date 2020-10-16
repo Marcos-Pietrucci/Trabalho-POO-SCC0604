@@ -20,45 +20,61 @@ public class interfaceTexto{
     /** Lista e objetos de Elementos que serão usados **/
     private ArrayList<Invasor> invaders;
     private ArrayList<Barreira> base;
+    private ArrayList<Tiro> tiroPlayer;
+    private ArrayList<Tiro> tiroInvader; //Ainda não implementado
     private Canhao player;
+    private Musica m;
+    private long tempo_tiro; //Controla o tempo para tocar sons do tiro
     
     /** Indica se o jogo acabou ou não **/
     private boolean jogo = true; 
     
-    /** Construtor
-     */
     interfaceTexto() 
     {
         invaders = new ArrayList<>();
         base = new ArrayList<>();
+        tiroPlayer = new ArrayList<>();
         tela = new char[tamX][tamY];
+        m = new Musica();
     }
     
-    /** Método responsável por deixar o jogo em loop, atualizando a matriz do jogo
-     *  e limpando o Output console
+    /** Método responsável por deixar o jogo em loop, atualizando a matriz do jogo e travando o Output console
      *  @throws InterruptedException - Por conta do método cls()
      */
     public void iniciaJogo() throws InterruptedException 
     {
         //Inicia a música
-        Musica m = new Musica();
-        m.startTheme();
+        m.iniciaTheme();
         
         //A cada nova fase, incrementa-se a posição inicial dos invasores
         setElementos(0);
         
+        //Vetor com os movimentos do canhão (pois não é possível ler o teclado nesta etapa)
+        int mov[] = {1,1,1,1,-1,-1,-1,-1,-1,1,1};
+        int tam_mov = 1, tam_inc = 1;
+        
         while(jogo)
         {
            //Core loop do jogo
-           processaMovimento();
-           cls();
            escreve_tela();
+           processaMovimento(mov, tam_mov);
+           cls();
+           
+           //Reseta a variavel de movimentos do canhao
+           if(tam_mov == 10 || tam_mov == 0)
+           {
+               if(tam_inc == 1)
+                   tam_inc = -1;
+               else
+                   tam_inc = 1;
+           }
+           tam_mov += tam_inc;
         }
                 
-        System.out.println("Você foi derrotado, sua pontuação foi de: " + player.getPontos());
+        System.out.println("\nVocê foi derrotado, sua pontuação foi de: " + player.getPontos());
     }
 
-    /** Método que vai instanciar todos os elementos do jogo
+    /** Método que instancia todos os elementos do jogo
      *  @param nFase int - Indica em qual fase o jogador está, para que os invasores nasçam avançados
      */
     private void setElementos(int nFase)
@@ -70,10 +86,9 @@ public class interfaceTexto{
             for (j = 5; j <= 15; j++) 
                 invaders.add(new Invasor(i + nFase, j, '&', 1, 1, 0));
             
-
         /* As barreiras ficarão na linha 27 */
         for (j = 4; j < 20; j += 4)
-            base.add(new Barreira(tamX - 3, j, '=', 1, 1));
+            base.add(new Barreira(tamX - 3, j, '=', 2, 0));
 
         /* O canhão começa mais ou menos no canto esquerdo */
         player = new Canhao(tamX - 1, 5, (char) 177, 1, 1);
@@ -87,21 +102,29 @@ public class interfaceTexto{
         Elemento aux;
         int i, j;
         
+        //Atualiza a posição dos invasores
+        i = 0;
+        while (i != invaders.size())
+        {
+            aux = invaders.get(i);
+            tela[aux.x][aux.y] = aux.getSimbol();
+            i++;
+        }
+        
+        //Atualiza a posição dos tiros
+        i = 0;
+        while (i != tiroPlayer.size())
+        {
+            aux = tiroPlayer.get(i);
+            tela[aux.x][aux.y] = aux.getSimbol();
+            i++;
+        }
+        
         //Atualiza a posição barreiras
         i = 0;
         while (i != base.size())
         {
             aux = base.get(i);
-            tela[aux.x][aux.y] = aux.getSimbol();
-            i++;
-        }
-        
-        //Atualiza a posição dos invasores
-        //Os invasores podem destruir a barreira por estar em cima dela
-        i = 0;
-        while (i != invaders.size())
-        {
-            aux = invaders.get(i);
             tela[aux.x][aux.y] = aux.getSimbol();
             i++;
         }
@@ -125,14 +148,45 @@ public class interfaceTexto{
     
     
     /** Método responsável por processar o movimento dos elementos
-     * Nele é decidido se os invasores vão para a esquerda, direta ou para baixo
+     * @param mov[] int - Contém as instruções de movimento do canhão
+     * @param tam_mov int - Contém o índice do vetor de instruções
      */
-    private void processaMovimento()
+    private void processaMovimento(int mov[], int tam_mov)
     {        
         Invasor auxInv;
-        int i,j;
-        boolean ready = false; //Evitar operações desnecessárias       
+        Tiro tiro;
+        Barreira auxBase;
+        int i,j;  
         
+        processa_colisoes();
+        
+        /******************************** Tiros_player ******************************************/
+        //Atirar apenas em intervalo de tempo de 1,5 segundos
+        if(System.nanoTime() - tempo_tiro >= 1500000000 )
+        {
+            tiro = new Tiro(player.x, player.y, (char) 42, 1, 1);
+            tiroPlayer.add(tiro);
+            
+            tempo_tiro = System.nanoTime();
+            
+            m.tiro();
+        }
+        
+        //Avançar com todos os tiros
+        i = 0;
+        while(i < tiroPlayer.size())
+        {
+            tiro = tiroPlayer.get(i);
+            tiro.x--;
+            
+            if(tiro.x < 0) //Tiro inválido, deve ser retirado
+                tiroPlayer.remove(tiro);
+            
+            i++;
+        }
+       
+   
+        /********************************** Invasores ******************************/
         //Pesquisar a localização atual dos invasores e setar o seu proximo movimento
         i = 0;
         while(i != invaders.size())
@@ -152,31 +206,114 @@ public class interfaceTexto{
                     auxInv.move();
                     j++;
                 }
-                ready = true;
-                break;
+                return;
             }
-            else if(auxInv.x == tamX -1) //Caso algum invasor chegue até a posicão do jogador o jogo acaba
+            else if(auxInv.x == tamX -1) //Caso algum invasor chegue até a posição do jogador, o jogo acaba
             {
                 jogo = false;
-                break;
+                return;
             }
             i++;
         }
         
-        //Modificações na direção não foram necessárias, posso simplesmente mover os invasores
+        //Se modificações não foram necessárias, posso simplesmente mover os invasores
         i = 0;
-        while(i != invaders.size() && !ready && jogo)
+        while(i != invaders.size() && jogo)
         {
             auxInv = invaders.get(i);
             auxInv.move();
             i++;
         }
         
+        
+        /********************************** Canhão ***********************************************/
         /* Ler as teclas e processar o movimento do personagem */
-        /* Não é possível. Com o terminal, apenas o Scanner funciona, e não é viável o jogador ter que apertar "ENTER" toda vez que inserir um comando */
+        /* Não é possível. Com o OutputConsole do NetBeans, apenas o Scanner funciona, e não é viável o jogador ter que apertar "ENTER" toda vez que inserir um comando */
         /* Para usar KeyEvents e a interface KeyListener é preciso interface gráfica */
-    
+        
+        /* Vou programar alguns movimentos para o canhão */
+        player.y = player.y + mov[tam_mov];
+        
+        
+        //Remover todas as barreiras cuja vida seja 0
+        i = 0;
+        while(i < base.size())
+        {
+            auxBase = base.get(i);
+            
+            if(auxBase.getVidas() == 0)
+                base.remove(auxBase);
+            
+            i++;
+        }
+        
     }
+    
+    /** Método responsável por processar todas as colisões do jogo
+     */
+    private void processa_colisoes()
+    {
+        Barreira auxBase;
+        Invasor auxInv;
+        Tiro tiro;
+        int i, j;
+        
+        /********** Colisão tiro-invasor ********************/
+        i = 0;
+        while(i < tiroPlayer.size())
+        {
+            j = 0;
+            tiro = tiroPlayer.get(i);
+            
+            while(j < invaders.size())
+            {
+                auxInv = invaders.get(j);
+                
+                //Testar colisão entre todos os tiros e todos os invasores
+                if(tiro.x == auxInv.x && tiro.y == auxInv.y)
+                {
+                    //Colisão!!
+                    //Vou retirar ambos os elementos de seus ArrayList
+                    tiroPlayer.remove(tiro);
+                    invaders.remove(auxInv);
+                    
+                    //O player ganha pontos!!
+                    player.aumentaPontos();
+                    
+                    //Toca o som de invasor destruido
+                    m.destruiInvasor();
+                }
+                j++;
+            }
+            i++;
+        }
+        
+        
+        /****************************** Colisão Barreira-Tiro **************************************/
+        i = 0;
+        while(i < base.size())
+        {
+            j = 0;
+            auxBase = base.get(i);
+            
+            while(j < tiroPlayer.size())
+            {
+                tiro = tiroPlayer.get(j);
+                
+                //Testar colisão entre todos os tiros e todos os invasores
+                if(tiro.x == auxBase.x && tiro.y == auxBase.y)
+                {
+                    //Colisão!!
+                    //Devo retirar uma vida da barreira e remover o tiro
+                    tiroPlayer.remove(tiro);
+                    auxBase.removeVida();
+                }
+                j++;
+            }
+            i++;
+        }
+    }
+    
 
     /** Método responsável por limpar o console
      * @throws InterruptedException - Por conta do comando Thread.sleep
@@ -192,6 +329,5 @@ public class interfaceTexto{
         for(i = 0; i < tamX; i++)
             for(j = 0; j< tamY; j++)
                 tela[i][j] = (char) 0;
-        
     }
 }

@@ -29,6 +29,6 @@ public class Canhao extends Elemento {
      */
     public void aumentaPontos()
     {
-        this.pontos++;
+        this.pontos += 10;
     }
 }
