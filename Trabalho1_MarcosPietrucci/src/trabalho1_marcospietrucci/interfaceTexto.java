@@ -11,7 +11,7 @@ public class interfaceTexto{
     
     /** Atributos que controlam o tamanho da matriz na qual o jogo ocorrerá **/
     //O campo será uma matriz de 15 linhas por 20 colunas
-    private final int tamX = 15;
+    private final int tamX = 20;
     private final int tamY = 20;
     
     /** Matriz de caracteres que será printada, simulando a tela do jogo **/
@@ -22,8 +22,8 @@ public class interfaceTexto{
     private ArrayList<Barreira> base;
     private ArrayList<Tiro> tiroPlayer;
     private ArrayList<Tiro> tiroInvader; //Ainda não implementado
-    private Canhao player;
-    private Musica m;
+    private Canhao jogador;
+    private Musica musica;
     private long tempo_tiro; //Controla o tempo para tocar sons do tiro
     
     /** Indica se o jogo acabou ou não **/
@@ -35,7 +35,7 @@ public class interfaceTexto{
         base = new ArrayList<>();
         tiroPlayer = new ArrayList<>();
         tela = new char[tamX][tamY];
-        m = new Musica();
+        musica = new Musica();
     }
     
     /** Método responsável por deixar o jogo em loop, atualizando a matriz do jogo e travando o Output console
@@ -44,34 +44,35 @@ public class interfaceTexto{
     public void iniciaJogo() throws InterruptedException 
     {
         //Inicia a música
-        m.iniciaTheme();
+        musica.iniciaTheme();
         
         //A cada nova fase, incrementa-se a posição inicial dos invasores
         setElementos(0);
         
-        //Vetor com os movimentos do canhão (pois não é possível ler o teclado nesta etapa)
-        int mov[] = {1,1,1,1,-1,-1,-1,-1,-1,1,1};
-        int tam_mov = 1, tam_inc = 1;
+        //Variáveis de controle do canhão (pois não é possível ler o teclado de forma funcional nesta etapa)
+        int mov = 1, cont_mov = 0;
         
         while(jogo)
         {
            //Core loop do jogo
            escreve_tela();
-           processaMovimento(mov, tam_mov);
+           processaMovimento(mov);
            cls();
            
            //Reseta a variavel de movimentos do canhao
-           if(tam_mov == 10 || tam_mov == 0)
+           cont_mov++;
+           if(cont_mov == 10)
            {
-               if(tam_inc == 1)
-                   tam_inc = -1;
+               cont_mov = 0;
+               if(mov == 1)
+                   mov = -1;
                else
-                   tam_inc = 1;
+                   mov = 1;
            }
-           tam_mov += tam_inc;
+           
         }
                 
-        System.out.println("\nVocê foi derrotado, sua pontuação foi de: " + player.getPontos());
+        System.out.println("\nVocê foi derrotado, sua pontuação foi de: " + jogador.getPontos());
     }
 
     /** Método que instancia todos os elementos do jogo
@@ -91,7 +92,7 @@ public class interfaceTexto{
             base.add(new Barreira(tamX - 3, j, '=', 2, 0));
 
         /* O canhão começa mais ou menos no canto esquerdo */
-        player = new Canhao(tamX - 1, 5, (char) 177, 1, 1);
+        jogador = new Canhao(tamX - 1, 5, (char) 177, 1, 1);
 
     }
 
@@ -129,8 +130,8 @@ public class interfaceTexto{
             i++;
         }
         
-        //Atualiza a posição do player
-        tela[player.x][player.y] = player.getSimbol();
+        //Atualiza a posição do jogador
+        tela[jogador.x][jogador.y] = jogador.getSimbol();
         
         //Escreve todo o conteúdo no Output Console
         for (i = 0; i < tamX; i++) 
@@ -148,10 +149,9 @@ public class interfaceTexto{
     
     
     /** Método responsável por processar o movimento dos elementos
-     * @param mov[] int - Contém as instruções de movimento do canhão
-     * @param tam_mov int - Contém o índice do vetor de instruções
+     * @param mov int - Contém o incremento da posição do canhão
      */
-    private void processaMovimento(int mov[], int tam_mov)
+    private void processaMovimento(int mov)
     {        
         Invasor auxInv;
         Tiro tiro;
@@ -160,16 +160,16 @@ public class interfaceTexto{
         
         processa_colisoes();
         
-        /******************************** Tiros_player ******************************************/
+        /******************************** Tiros_jogador ******************************************/
         //Atirar apenas em intervalo de tempo de 1,5 segundos
-        if(System.nanoTime() - tempo_tiro >= 1500000000 )
+        if(System.nanoTime() - tempo_tiro >= 1000000000 )
         {
-            tiro = new Tiro(player.x, player.y, (char) 42, 1, 1);
+            tiro = new Tiro(jogador.x, jogador.y, (char) 42, 1, 1);
             tiroPlayer.add(tiro);
             
             tempo_tiro = System.nanoTime();
             
-            m.tiro();
+            musica.tiro();
         }
         
         //Avançar com todos os tiros
@@ -194,7 +194,8 @@ public class interfaceTexto{
             auxInv = invaders.get(i);
                      
             //Caso algum dos invasores esteja prestes a sair da borda, devemos mudar o sentido de seu movimento
-            if((auxInv.getDirecao() == 0 && auxInv.y == tamY -1) || (auxInv.getDirecao() == 1 && auxInv.y == 0))
+            if((auxInv.getDirecao() == 0 && auxInv.y == tamY -1) || (auxInv.getDirecao() == 1 && auxInv.y == 0) || (auxInv.y + auxInv.velocidade > tamY && auxInv.getDirecao()== 0)
+                ||(auxInv.getDirecao() == 1 && auxInv.y - auxInv.velocidade < 0))
             {
                 //Já sabemos o que fazer com todos os invasores                
                 j = 0;
@@ -232,12 +233,12 @@ public class interfaceTexto{
         /* Para usar KeyEvents e a interface KeyListener é preciso interface gráfica */
         
         /* Vou programar alguns movimentos para o canhão */
-        player.y = player.y + mov[tam_mov];
+        jogador.y = jogador.y + mov;
         
         
         //Remover todas as barreiras cuja vida seja 0
         i = 0;
-        while(i < base.size())
+        while(i < base.size() && jogo)
         {
             auxBase = base.get(i);
             
@@ -277,11 +278,14 @@ public class interfaceTexto{
                     tiroPlayer.remove(tiro);
                     invaders.remove(auxInv);
                     
-                    //O player ganha pontos!!
-                    player.aumentaPontos();
+                    //O jogador ganha pontos!!
+                    jogador.aumentaPontos();
                     
                     //Toca o som de invasor destruido
-                    m.destruiInvasor();
+                    musica.destruiInvasor();
+                    
+                    //Aumentar, proporcionalmente, a velocidade dos invasores
+                    invaders = auxInv.aumentaVelocidade(invaders, musica);
                 }
                 j++;
             }
@@ -323,7 +327,7 @@ public class interfaceTexto{
         int i,j;
         
         //Dando este sleep causa o efeito de refresh
-        Thread.sleep(500); 
+        Thread.sleep(300); 
         
         //Além disso devo limpar a matriz tela
         for(i = 0; i < tamX; i++)

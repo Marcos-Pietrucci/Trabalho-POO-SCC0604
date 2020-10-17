@@ -1,5 +1,7 @@
 package trabalho1_marcospietrucci;
 
+import java.util.ArrayList;
+
 /**
  * Classe que define os invasores, sendo filha de "Elemento"
  * @author Marcos Pietrucci
@@ -94,5 +96,45 @@ public class Invasor extends Elemento{
                         break;
             } 
         } 
+    }
+    
+    /**
+     * Método responsável por aumentar a velocidade dos invasores
+     * @param invaders ArrayList - Contém todos os objetos dos invasores
+     * @param m Musica - Controla os efeitos sonoros
+     * @return invaders ArrayList - Retorna o mesmo ArrayList com as modificações necessárias
+     */
+    public ArrayList<Invasor> aumentaVelocidade(ArrayList<Invasor> invaders, Musica m)
+    {
+        //Temos 11x5 invasores = 55
+        //Devo aumentar a velocidade de movimento dos aliens quando abater mais de 15
+        Invasor auxInv;
+        int i = 0;
+        if(invaders.size() == 35)
+        {
+            //Aumentar a velocidade de todos
+            while(i != invaders.size())
+            {
+                auxInv = invaders.get(i);
+                auxInv.velocidade++;
+                i++;
+            }
+            
+            m.iniciaTheme2();
+        }
+        else if(invaders.size() == 10)
+        {
+            while(i != invaders.size())
+            {
+                auxInv = invaders.get(i);
+                auxInv.velocidade++;
+                i++;
+            }
+            
+            m.iniciaTheme2();
+
+        }
+        
+        return invaders;
     }
 }

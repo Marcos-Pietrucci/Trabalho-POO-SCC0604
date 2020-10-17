@@ -24,6 +24,31 @@ public class Musica {
         {
             /* Queria criar uma pasta separada para a música, mas o formato de indexação de arquivos do Windows é diferente do Mac e do Linux */
             /* Então tive que deixar o arquivo na raiz do projeto, para garantir que funcione */
+            musica = AudioSystem.getAudioInputStream(new File("theme.wav"));
+            clip = AudioSystem.getClip();
+            
+            clip.open(musica);
+            clip.start();
+            clip.loop(Clip.LOOP_CONTINUOUSLY);
+        }
+        catch(Exception e)
+        {
+            System.out.println("Erro ao tocar a música: " + e.getMessage());
+        }
+    }
+    
+    /**
+     * Método que inicia a música tema acelerada em loop
+     */
+    public void iniciaTheme2()
+    {              
+        try
+        {
+            //Para a musica atual
+            clip.stop();
+            
+            /* Queria criar uma pasta separada para a música, mas o formato de indexação de arquivos do Windows é diferente do Mac e do Linux */
+            /* Então tive que deixar o arquivo na raiz do projeto, para garantir que funcione */
             musica = AudioSystem.getAudioInputStream(new File("theme2.wav"));
             clip = AudioSystem.getClip();
             
@@ -38,6 +63,32 @@ public class Musica {
     }
     
     /**
+     * Método que inicia a música tema acelerada em loop
+     */
+    public void iniciaTheme3()
+    {              
+        try
+        {
+            //Para a musica atual
+            clip.stop();
+            
+            /* Queria criar uma pasta separada para a música, mas o formato de indexação de arquivos do Windows é diferente do Mac e do Linux */
+            /* Então tive que deixar o arquivo na raiz do projeto, para garantir que funcione */
+            musica = AudioSystem.getAudioInputStream(new File("theme3.wav"));
+            clip = AudioSystem.getClip();
+            
+            clip.open(musica);
+            clip.start();
+            clip.loop(Clip.LOOP_CONTINUOUSLY);
+        }
+        catch(Exception e)
+        {
+            System.out.println("Erro ao tocar a música: " + e.getMessage());
+        }
+    }
+    
+    
+    /**
      * Método que toca o efeito sonoro do tiro do canhão
      */
     public void tiro()
@@ -47,10 +98,10 @@ public class Musica {
             /* Queria criar uma pasta separada para a música, mas o formato de indexação de arquivos do Windows é diferente do Mac e do Linux */
             /* Então tive que deixar o arquivo na raiz do projeto, para garantir que funcione */
             musica = AudioSystem.getAudioInputStream(new File("tiro.wav"));
-            clip = AudioSystem.getClip();
+            Clip clip2 = AudioSystem.getClip();
             
-            clip.open(musica);
-            clip.start();
+            clip2.open(musica);
+            clip2.start();
         }
         catch(Exception e)
         {
@@ -68,10 +119,10 @@ public class Musica {
             /* Queria criar uma pasta separada para a música, mas o formato de indexação de arquivos do Windows é diferente do Mac e do Linux */
             /* Então tive que deixar o arquivo na raiz do projeto, para garantir que funcione */
             musica = AudioSystem.getAudioInputStream(new File("invader.wav"));
-            clip = AudioSystem.getClip();
+            Clip clip3 = AudioSystem.getClip();
             
-            clip.open(musica);
-            clip.start();
+            clip3.open(musica);
+            clip3.start();
         }
         catch(Exception e)
         {
