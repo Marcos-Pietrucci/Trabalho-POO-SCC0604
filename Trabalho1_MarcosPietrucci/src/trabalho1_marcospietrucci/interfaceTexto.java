@@ -23,7 +23,7 @@ public class interfaceTexto{
     private ArrayList<Tiro> tiroPlayer;
     private ArrayList<Tiro> tiroInvader; //Ainda não implementado
     private Canhao jogador;
-    private Musica musica;
+    private final Musica musica;
     private long tempo_tiro; //Controla o tempo para tocar sons do tiro
     
     /** Indica se o jogo acabou ou não **/
@@ -161,8 +161,8 @@ public class interfaceTexto{
         processa_colisoes();
         
         /******************************** Tiros_jogador ******************************************/
-        //Atirar apenas em intervalo de tempo de 1,5 segundos
-        if(System.nanoTime() - tempo_tiro >= 1000000000 )
+        //Atirar apenas em intervalo de tempo de 1 segundo
+        if(System.nanoTime() - tempo_tiro >= 800000000 )
         {
             tiro = new Tiro(jogador.x, jogador.y, (char) 42, 1, 1);
             tiroPlayer.add(tiro);
@@ -194,8 +194,8 @@ public class interfaceTexto{
             auxInv = invaders.get(i);
                      
             //Caso algum dos invasores esteja prestes a sair da borda, devemos mudar o sentido de seu movimento
-            if((auxInv.getDirecao() == 0 && auxInv.y == tamY -1) || (auxInv.getDirecao() == 1 && auxInv.y == 0) || (auxInv.y + auxInv.velocidade > tamY && auxInv.getDirecao()== 0)
-                ||(auxInv.getDirecao() == 1 && auxInv.y - auxInv.velocidade < 0))
+            if((auxInv.getDirecao() == 0 && auxInv.y == tamY -1) || (auxInv.getDirecao() == 1 && auxInv.y == 0) || (auxInv.y + Invasor.velocidade > tamY - 1 && auxInv.getDirecao()== 0)
+                ||(auxInv.getDirecao() == 1 && auxInv.y - Invasor.velocidade < 0))
             {
                 //Já sabemos o que fazer com todos os invasores                
                 j = 0;
@@ -204,7 +204,7 @@ public class interfaceTexto{
                     //Internamente, a classe se encarrega de mover os invasores para baixo
                     auxInv = invaders.get(j);
                     auxInv.inverteSentido(); //Inverter sua direção
-                    auxInv.move();
+                    auxInv.move(tamY);
                     j++;
                 }
                 return;
@@ -222,7 +222,7 @@ public class interfaceTexto{
         while(i != invaders.size() && jogo)
         {
             auxInv = invaders.get(i);
-            auxInv.move();
+            auxInv.move(tamY);
             i++;
         }
         
@@ -284,8 +284,8 @@ public class interfaceTexto{
                     //Toca o som de invasor destruido
                     musica.destruiInvasor();
                     
-                    //Aumentar, proporcionalmente, a velocidade dos invasores
-                    invaders = auxInv.aumentaVelocidade(invaders, musica);
+                    //Aumentar a velocidade dos invasores conforme vão sendo abatidos
+                    Invasor.aumentaVelocidade(invaders, musica);
                 }
                 j++;
             }

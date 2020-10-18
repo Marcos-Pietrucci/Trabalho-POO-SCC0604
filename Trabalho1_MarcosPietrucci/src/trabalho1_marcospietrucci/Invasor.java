@@ -77,8 +77,9 @@ public class Invasor extends Elemento{
     
     /**
      * Método que efetivamente atualiza a posição do invasor 
+     * @param tamY int - Número de colunas do campo
      */
-    public void move()
+    public void move(int tamY)
     {   
         if(this.descer == 1)
         {
@@ -89,10 +90,21 @@ public class Invasor extends Elemento{
         {
             switch (direcao)
             {
-                case 0: this.y += this.velocidade;
+                case 0: if(this.y < tamY - 1 && (this.y + Invasor.velocidade >= tamY))
+                        {
+                            System.out.println("TESTE");
+                            this.y++;
+                        }
+                        else
+                            this.y += Invasor.velocidade;
+                
                         break;
             
-                case 1: this.y -= this.velocidade;
+                case 1: if(this.y > 1 && (this.y - Invasor.velocidade <= 0))
+                            this.y--;
+                        else
+                            this.y -= Invasor.velocidade;
+                
                         break;
             } 
         } 
@@ -102,39 +114,23 @@ public class Invasor extends Elemento{
      * Método responsável por aumentar a velocidade dos invasores
      * @param invaders ArrayList - Contém todos os objetos dos invasores
      * @param m Musica - Controla os efeitos sonoros
-     * @return invaders ArrayList - Retorna o mesmo ArrayList com as modificações necessárias
      */
-    public ArrayList<Invasor> aumentaVelocidade(ArrayList<Invasor> invaders, Musica m)
+    public static void aumentaVelocidade(ArrayList<Invasor> invaders, Musica m)
     {
         //Temos 11x5 invasores = 55
         //Devo aumentar a velocidade de movimento dos aliens quando abater mais de 15
         Invasor auxInv;
-        int i = 0;
-        if(invaders.size() == 35)
+        if(invaders.size() == 50)
         {
-            //Aumentar a velocidade de todos
-            while(i != invaders.size())
-            {
-                auxInv = invaders.get(i);
-                auxInv.velocidade++;
-                i++;
-            }
-            
+            //Velocidade é um atributo estático, por isso aumenta a velocidade de todos ao mesmo tempo
+            Invasor.velocidade++;
             m.iniciaTheme2();
         }
-        else if(invaders.size() == 10)
+        else if(invaders.size() == 20)
         {
-            while(i != invaders.size())
-            {
-                auxInv = invaders.get(i);
-                auxInv.velocidade++;
-                i++;
-            }
-            
-            m.iniciaTheme2();
-
+            Invasor.velocidade++;
+            m.iniciaTheme3();
         }
         
-        return invaders;
     }
 }

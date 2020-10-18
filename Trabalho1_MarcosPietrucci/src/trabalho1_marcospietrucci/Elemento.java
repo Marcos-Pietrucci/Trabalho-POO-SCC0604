@@ -10,7 +10,7 @@ public abstract class Elemento {
     public int x, y;
     protected char simbol;
     protected int vidas;
-    protected int velocidade;
+    protected static int velocidade;
     
     
     Elemento(int x, int y, char simbol, int vidas, int velocidade)
