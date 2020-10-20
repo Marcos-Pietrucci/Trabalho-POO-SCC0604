@@ -10,16 +10,14 @@ public abstract class Elemento {
     public int x, y;
     protected char simbol;
     protected int vidas;
-    protected static int velocidade;
     
     
-    Elemento(int x, int y, char simbol, int vidas, int velocidade)
+    Elemento(int x, int y, char simbol, int vidas)
     {
         this.x = x;
         this.y = y;
         this.simbol = simbol;
         this.vidas = vidas;
-        this.velocidade = velocidade;
     }
     
     /**

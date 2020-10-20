@@ -12,7 +12,7 @@ public class interfaceTexto{
     /** Atributos que controlam o tamanho da matriz na qual o jogo ocorrerá **/
     //O campo será uma matriz de 15 linhas por 20 colunas
     private final int tamX = 20;
-    private final int tamY = 20;
+    private final int tamY = 40;
     
     /** Matriz de caracteres que será printada, simulando a tela do jogo **/
     private char tela[][];
@@ -21,7 +21,7 @@ public class interfaceTexto{
     private ArrayList<Invasor> invaders;
     private ArrayList<Barreira> base;
     private ArrayList<Tiro> tiroPlayer;
-    private ArrayList<Tiro> tiroInvader; //Ainda não implementado
+    //private ArrayList<Tiro> tiroInvader; //Ainda não implementado
     private Canhao jogador;
     private final Musica musica;
     private long tempo_tiro; //Controla o tempo para tocar sons do tiro
@@ -84,15 +84,18 @@ public class interfaceTexto{
         /* Na minha matriz de 15x20 eles devem começar em uma região especifica*/
         int i, j;
         for (i = 0; i <= 4; i++) 
-            for (j = 5; j <= 15; j++) 
+            for (j = tamY/2 - 5; j <= tamY/2 + 5; j++) 
                 invaders.add(new Invasor(i + nFase, j, '&', 1, 1, 0));
             
         /* As barreiras ficarão na linha 27 */
-        for (j = 4; j < 20; j += 4)
-            base.add(new Barreira(tamX - 3, j, '=', 2, 0));
-
+        //Não encontrei formula para as barreiras dependerem do tamanho
+        for (j = 4; j < 37; j += 8)
+        {
+            base.add(new Barreira(tamX - 3, j, '=', 2));
+            base.add(new Barreira(tamX - 3, j+1, '=', 2 ));
+        }
         /* O canhão começa mais ou menos no canto esquerdo */
-        jogador = new Canhao(tamX - 1, 5, (char) 177, 1, 1);
+        jogador = new Canhao(tamX - 1, tamY/3, (char) 177, 1);
 
     }
 
@@ -117,7 +120,12 @@ public class interfaceTexto{
         while (i != tiroPlayer.size())
         {
             aux = tiroPlayer.get(i);
-            tela[aux.x][aux.y] = aux.getSimbol();
+            
+            //Caso nesta mesma posição tenha um Alien, vou adicionar um "efeito" de explosão
+            if(tela[aux.x][aux.y] == '&' || tela[aux.x][aux.y] == '$')
+                tela[aux.x][aux.y] = (char) 37;
+            else
+                tela[aux.x][aux.y] = aux.getSimbol();
             i++;
         }
         
@@ -164,7 +172,7 @@ public class interfaceTexto{
         //Atirar apenas em intervalo de tempo de 1 segundo
         if(System.nanoTime() - tempo_tiro >= 800000000 )
         {
-            tiro = new Tiro(jogador.x, jogador.y, (char) 42, 1, 1);
+            tiro = new Tiro(jogador.x, jogador.y, (char) 42, 1);
             tiroPlayer.add(tiro);
             
             tempo_tiro = System.nanoTime();
@@ -194,8 +202,9 @@ public class interfaceTexto{
             auxInv = invaders.get(i);
                      
             //Caso algum dos invasores esteja prestes a sair da borda, devemos mudar o sentido de seu movimento
-            if((auxInv.getDirecao() == 0 && auxInv.y == tamY -1) || (auxInv.getDirecao() == 1 && auxInv.y == 0) || (auxInv.y + Invasor.velocidade > tamY - 1 && auxInv.getDirecao()== 0)
-                ||(auxInv.getDirecao() == 1 && auxInv.y - Invasor.velocidade < 0))
+            if((auxInv.getDirecao() == 0 && auxInv.y == tamY -1) || (auxInv.getDirecao() == 1 && auxInv.y == 0)
+                || (auxInv.y + Invasor.getVelocidade() > tamY - 1 && auxInv.getDirecao()== 0)
+                ||(auxInv.getDirecao() == 1 && auxInv.y - Invasor.getVelocidade() < 0))
             {
                 //Já sabemos o que fazer com todos os invasores                
                 j = 0;
@@ -235,7 +244,6 @@ public class interfaceTexto{
         /* Vou programar alguns movimentos para o canhão */
         jogador.y = jogador.y + mov;
         
-        
         //Remover todas as barreiras cuja vida seja 0
         i = 0;
         while(i < base.size() && jogo)
@@ -273,7 +281,7 @@ public class interfaceTexto{
                 //Testar colisão entre todos os tiros e todos os invasores
                 if(tiro.x == auxInv.x && tiro.y == auxInv.y)
                 {
-                    //Colisão!!
+                    //Colisão!!                                  
                     //Vou retirar ambos os elementos de seus ArrayList
                     tiroPlayer.remove(tiro);
                     invaders.remove(auxInv);
@@ -327,11 +335,11 @@ public class interfaceTexto{
         int i,j;
         
         //Dando este sleep causa o efeito de refresh
-        Thread.sleep(300); 
+        Thread.sleep(250); 
         
         //Além disso devo limpar a matriz tela
         for(i = 0; i < tamX; i++)
             for(j = 0; j< tamY; j++)
-                tela[i][j] = (char) 0;
+                    tela[i][j] = (char) 0;
     }
 }

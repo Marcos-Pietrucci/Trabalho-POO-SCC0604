@@ -9,6 +9,11 @@ import java.util.ArrayList;
  */
 public class Invasor extends Elemento{
     
+    /**
+     * Velocidade de todos os invasores
+     */
+   private static int velocidade; 
+    
     /** 0: mover para direita
        1: mover para esquerda
     */
@@ -26,8 +31,9 @@ public class Invasor extends Elemento{
     
     Invasor(int x, int y, char simbol, int vidas, int velocidade, int direcao)
     {
-        super(x,y,simbol,vidas,velocidade);
+        super(x,y,simbol,vidas);
         this.direcao = direcao;
+        Invasor.velocidade = velocidade;
     }
     
     /**
@@ -38,7 +44,6 @@ public class Invasor extends Elemento{
     {
         return this.direcao;
     }
-    
     
     /**
      * Método que retorna um símbolo para o invasor. Existem 2 símbolos diferentes que alternam entre si.
@@ -55,6 +60,15 @@ public class Invasor extends Elemento{
         }
         else
             return this.simbol2;
+    }
+    
+    /**
+     * Método que retorna a velocidade dos invasores
+     * @return 
+     */
+    public static int getVelocidade()
+    {
+        return Invasor.velocidade;
     }
     
     /**
@@ -90,21 +104,24 @@ public class Invasor extends Elemento{
         {
             switch (direcao)
             {
-                case 0: if(this.y < tamY - 1 && (this.y + Invasor.velocidade >= tamY))
-                        {
-                            System.out.println("TESTE");
+                case 0: if(this.y < tamY && (this.y + Invasor.velocidade >= tamY))
+                        {   
                             this.y++;
                         }
                         else
+                        {
                             this.y += Invasor.velocidade;
-                
+                        }
                         break;
             
-                case 1: if(this.y > 1 && (this.y - Invasor.velocidade <= 0))
+                case 1: if(this.y >= 1 && (this.y - Invasor.velocidade < 0))
+                        {
                             this.y--;
+                        }
                         else
+                        {
                             this.y -= Invasor.velocidade;
-                
+                        }
                         break;
             } 
         } 
@@ -119,8 +136,7 @@ public class Invasor extends Elemento{
     {
         //Temos 11x5 invasores = 55
         //Devo aumentar a velocidade de movimento dos aliens quando abater mais de 15
-        Invasor auxInv;
-        if(invaders.size() == 50)
+        if(invaders.size() == 35)
         {
             //Velocidade é um atributo estático, por isso aumenta a velocidade de todos ao mesmo tempo
             Invasor.velocidade++;

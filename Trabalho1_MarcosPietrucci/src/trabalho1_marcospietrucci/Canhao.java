@@ -9,9 +9,9 @@ public class Canhao extends Elemento {
     
     private int pontos;
     
-    Canhao(int x, int y, char simbol, int vidas, int velocidade)
+    Canhao(int x, int y, char simbol, int vidas)
     {
-        super(x,y,simbol,vidas,velocidade);
+        super(x,y,simbol,vidas);
         pontos = 0;
     }
     
