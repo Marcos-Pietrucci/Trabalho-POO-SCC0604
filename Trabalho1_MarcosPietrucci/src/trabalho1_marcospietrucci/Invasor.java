@@ -64,7 +64,7 @@ public class Invasor extends Elemento{
     
     /**
      * Método que retorna a velocidade dos invasores
-     * @return 
+     * @return velocidade int - Velocidade do invasor
      */
     public static int getVelocidade()
     {
