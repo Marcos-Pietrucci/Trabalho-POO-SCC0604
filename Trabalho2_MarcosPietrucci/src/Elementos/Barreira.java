@@ -13,14 +13,10 @@ import javafx.scene.image.Image;
  */
 public class Barreira extends Elemento{
     
-    public Barreira(double x, double y, int altura, int largura, int vidas, Image imagem) {
-        super(x, y, altura, largura, vidas, imagem);
+    public Barreira(double x, double y, int largura, int altura, int vidas, Image imagem) {
+        super(x, y, largura, altura, vidas, imagem);
     }
 
-    @Override
-    public void move() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-    
+   
  
 }

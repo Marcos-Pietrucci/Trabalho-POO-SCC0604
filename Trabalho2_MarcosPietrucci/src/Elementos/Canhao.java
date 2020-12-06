@@ -14,11 +14,13 @@ import javafx.scene.input.KeyEvent;
  */
 public class Canhao extends Elemento{
     
-    private int velocidade;
+    private final int velocidade;
    
-    public Canhao(double x, double y, int altura, int largura, int vidas, Image imagem) {
-        super(x, y, altura, largura, vidas, imagem);
-        this.velocidade = 5;
+    public Canhao(double x, double y, int largura, int altura, int vidas,
+                  int velocidade, Image imagem)
+    {
+        super(x, y, largura, altura, vidas, imagem);
+        this.velocidade = velocidade;
     }
     
     public void move(KeyEvent e)
@@ -32,9 +34,9 @@ public class Canhao extends Elemento{
                         break;           
         }   
     }
-
-    @Override
-    public void move() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    
+    public int getVelocidade()
+    {
+        return this.velocidade;
     }
 }

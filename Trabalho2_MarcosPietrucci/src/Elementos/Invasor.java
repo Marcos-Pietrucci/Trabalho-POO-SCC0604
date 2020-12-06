@@ -20,8 +20,8 @@ public class Invasor extends Elemento{
     private static int direcao;
     private static int descer;
 
-    public Invasor(double x, double y, int altura, int largura, int vidas, Image imagem) {
-        super(x, y, altura, largura, vidas, imagem);
+    public Invasor(double x, double y, int largura, int altura, int vidas, Image imagem) {
+        super(x, y, largura, altura, vidas, imagem);
         Invasor.direcao = 0;
         Invasor.descer = 0;
         Invasor.velocidade = 0.5;
@@ -78,7 +78,7 @@ public class Invasor extends Elemento{
     {   
         if(Invasor.descer == 1)
         {
-            this.y+=2;
+            this.y+=5;
         }
         else
         {
@@ -115,12 +115,7 @@ public class Invasor extends Elemento{
     public static void aumentaVelocidade(ArrayList<Invasor> invaders)
     {
         //O número original dos aliens é 55        
-        Invasor.velocidade += 0.01;
-    }
-
-    @Override
-    public void move() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        Invasor.velocidade += 0.05;
     }
 
 }

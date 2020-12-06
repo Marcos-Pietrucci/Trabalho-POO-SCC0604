@@ -21,14 +21,14 @@ public abstract class Elemento {
     
     
     
-    Elemento(double x, double y, int altura, int largura, int vidas , Image imagem)
+    Elemento(double x, double y, int largura, int altura, int vidas , Image imagem)
     {
         this.x = x;
         this.y = y;
         this.vidas = vidas;
         this.imagem = imagem;
-        this.altura = altura;
         this.largura = largura;
+        this.altura = altura;
     }
     
     /**
@@ -79,8 +79,4 @@ public abstract class Elemento {
         this.vivo = false;
     }
     
-    /**
-     * Método abstrado que se responsabiliza por mover cada um dos elementos
-     */
-    public abstract void move();
 }

@@ -16,14 +16,31 @@ public class Tiro extends Elemento{
     //O tiro será de Aliens ou do Canhão
     public int origem;  //0 para Alien, 1 para canhão
     
+    private final int velocidade;
 
-    public Tiro(double x, double y, int altura, int largura, int vidas, Image imagem) {
-        super(x, y, altura, largura, vidas, imagem);
+    public Tiro(double x, double y, int largura, int altura, int vidas, int velocidade, int origem, Image imagem) {
+        super(x, y, largura, altura, vidas, imagem);
+        this.velocidade = velocidade;
+        this.origem = origem;
     }
 
-    @Override
-    public void move() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-    
+    public boolean move(int tamY)
+    {
+        if(origem == 1)
+        {
+            if(this.y > 0)
+                this.y -= velocidade;
+            else
+                return false;
+        }
+        else
+        {
+            if(this.y < tamY)
+                this.y += velocidade;
+            else
+                return false;
+        }
+            
+        return true;
+    }   
 }

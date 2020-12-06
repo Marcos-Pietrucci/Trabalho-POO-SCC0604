@@ -9,14 +9,15 @@ import Engine_funcionamento.Engine;
 import java.util.ArrayList;
 import Elementos.*;
 
+
 import javafx.animation.AnimationTimer;
 import javafx.application.Application;
+
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
-import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.stage.Stage;
 
@@ -36,6 +37,8 @@ public class TelaJogo extends Application {
     
     //ArrayList com todos os elementos
     private ArrayList<Elemento> objetos;
+    
+    ArrayList<String> entradas = new ArrayList<>();
     
     //O canhão do jogador
     Canhao player;
@@ -92,7 +95,8 @@ public class TelaJogo extends Application {
                 for(i = 0; i < objetos.size(); i++)
                 {
                     Elemento elem = objetos.get(i);
-                    gc.drawImage(elem.imagem, elem.x, elem.y );
+                    if(elem.vivo)
+                        gc.drawImage(elem.imagem, elem.x, elem.y );
                 }
                 
             }
@@ -107,18 +111,19 @@ public class TelaJogo extends Application {
     * Método lê as teclas pressionadas pelo usuário 
     */
     public void ler_Teclas() {
-        scene.setOnKeyPressed((KeyEvent e) -> {
+        
+        scene.setOnKeyPressed((KeyEvent e) -> {            
             
-            System.out.println("vagina");
+           engine.addEntrada(e.getCode());
+                        
+        });  
+        
+        scene.setOnKeyReleased((KeyEvent e) -> {            
             
-            if(e.getCode() == KeyCode.SPACE)
-                engine.criaTiro();
-            else
-                player.move(e);
+            engine.removeEntrada(e.getCode());
                         
         });
-    
-    
+      
     }
     
 }
