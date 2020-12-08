@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package Engine_funcionamento;
 import Elementos.*;
 import java.util.ArrayList;
@@ -12,14 +7,16 @@ import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
 
 /**
- *
- * @author marco
+ * Classe que controla toda a lógica do jogo
+ * @author Marcos Pietrucci
+ * @since dec 2020
  */
 public class Engine {
     
     //Variaveis de controle externo
     public boolean ganhou;
     public boolean jogoAtivo;
+    public boolean atingido;
     
     //Separa os elementos em ArrayList Separados
     private ArrayList<Barreira> barreiras = new ArrayList<>();
@@ -39,13 +36,14 @@ public class Engine {
         tempo_tiro_alien = System.currentTimeMillis();
         ganhou = false;
         jogoAtivo = true;
+        atingido = false;
     }
     
     /**
      * Método que instancia todos os elementos do jogo
      * @param tamX int - Número de colunas da telinha 
      * @param tamY int - Número de linhas da telinha
-     * @return objetos ArrayList<Elementos> - Arraylist contendo todos os elementos do jogo
+     * @return objetos ArrayList(Elementos) - Arraylist contendo todos os elementos do jogo
      */
     public ArrayList<Elemento> criaElementos(int tamX, int tamY)
     {
@@ -65,6 +63,7 @@ public class Engine {
         for (j = 100; j < 400; j += 60)
             for (i = 80; i < 740; i += 60)
             {
+                //Mudar a imagem do invasor conforme for adicionando
                 if(cont_invasor == 11)
                     img = invasor2;
                 else if(cont_invasor == 33)
@@ -77,19 +76,16 @@ public class Engine {
         Collections.shuffle(aliens);
         
         /* As barreiras ficarão na linha tamX - 40 */
-        barreiras.add(new Barreira( 90, tamY - 130, 100, 50, 8, barreiraImg));
-        
-        barreiras.add(new Barreira( 330, tamY - 130, 100, 50, 8, barreiraImg));
-        
-        barreiras.add(new Barreira( 570, tamY - 130, 100, 50, 8, barreiraImg));
-        
-        barreiras.add(new Barreira( 810, tamY - 130, 100, 50, 8, barreiraImg));
+        barreiras.add(new Barreira( 90, tamY - 130, 100, 50, 10, barreiraImg));
+        barreiras.add(new Barreira( 330, tamY - 130, 100, 50, 10, barreiraImg));
+        barreiras.add(new Barreira( 570, tamY - 130, 100, 50, 10, barreiraImg));
+        barreiras.add(new Barreira( 810, tamY - 130, 100, 50, 10, barreiraImg));
         
         /* O canhão começa mais ou menos no canto esquerdo */
         player = new Canhao(300, tamY - 50, 40, 40, 3, 4,
                     new Image("Imagens/nave.png", 40, 40, false,false));
         
-        //Adicionar os outros elementos no arrayList       
+        //Adicionar os elementos no arrayList       
         objetos.addAll(aliens);
         objetos.addAll(barreiras);
         objetos.add(player);
@@ -97,15 +93,15 @@ public class Engine {
     }
     
     /**
-     * Processa colisões e movimentos do jogo
-     * @return objetos ArrayList<Elementos> - Arraylist contendo todos os elementos do jogo
+     * Método que verifica o status do jogo e ativa funções de colisão e movimento
+     * @return objetos ArrayList(Elementos) - Arraylist contendo todos os elementos do jogo
      * @param tamX int - Número de colunas da telinha 
      * @param tamY int - Número de linhas da telinha
      */
     public ArrayList<Elemento> processaJogo(int tamX, int tamY)
     {
         //Verificar se o jogo está ativo
-        if(aliens.size() == 0)
+        if(aliens.isEmpty())
         {
             ganhou = true;
             jogoAtivo = false;
@@ -116,17 +112,14 @@ public class Engine {
             jogoAtivo = false;
         }
         
+        //Processa os movimentos e as colisões do jogo
+        processa_colisoes_e_movimento(tamX, tamY);
+        
         //Processa o movimento do player
         processa_movimento_jogador(tamX);
         
         //Gera os tiros dos aliens
-        gera_tiro_alien();
-        
-        //Processa os movimentos e as colisões do jogo
-        processa_colisoes_e_movimento(tamX, tamY);      
-        
-        //Verifica o estado das barreiras
-        verifica_barreiras();
+        gera_tiro_alien();      
         
         //Cria um arrayList com todos os elementos e retorna
         ArrayList<Elemento> obj = new ArrayList<>();
@@ -145,7 +138,7 @@ public class Engine {
      */
     public void processa_colisoes_e_movimento(int tamX, int tamY)
     {
-        //Array para remoção de elementos
+        //Arrays para remoção de elementos
         ArrayList<Invasor> remove_inv = new ArrayList<>();
         ArrayList<Tiro> remove_tiro = new ArrayList<>();
         ArrayList<Tiro> remove_tiro2 = new ArrayList<>();
@@ -158,12 +151,13 @@ public class Engine {
         boolean flag_inversao = false;
         int i, j;
         
+        
+        /**************** Movimentação dos invasores **********************/
         for(i = 0; i < aliens.size(); i++)
-        {
+        {            
             aliens.get(i).move(tamX);
-            
             aux_inv = aliens.get(i);
-                        //Caso algum dos invasores esteja prestes a sair da borda, devemos
+            //Caso algum dos invasores esteja prestes a sair da borda, devemos
             // descer emudar o sentido de seu movimento
             if((Invasor.getDirecao() == 0 && aux_inv.x + aux_inv.largura >= tamX)
                 || (Invasor.getDirecao() == 1 && aux_inv.x <= 0)
@@ -177,6 +171,7 @@ public class Engine {
             }
         }
         
+        //Inverter o sentido do movimento dos aliens
         if(flag_inversao == true)
         {
             Invasor.inverteSentido();
@@ -186,7 +181,7 @@ public class Engine {
             }
         }
         
-        /********************* Movimento dos tiros do jogador *************************/
+        /****************** Movimento dos tiros do jogador ********************/
         for(i = 0; i < tiroPlayer.size(); i++)
         {
             aux_tiro = tiroPlayer.get(i);
@@ -201,7 +196,6 @@ public class Engine {
                     //Verificar se ouve colisão, se tiver, destruir ambos e contar pontos
                     if(verifica_colisao(tiroPlayer.get(i), aliens.get(j)))
                     {
-                        //Adiciona numa coleção de removidos
                         //Marcar os elementos para remoção
                         remove_tiro.add(aux_tiro);   
                         remove_inv.add(aux_inv);
@@ -209,8 +203,14 @@ public class Engine {
                         //Contar pontos!
                         player.ganhaPontos();
 
-                        //Aumentar a velocidade dos aliens
-                        Invasor.aumentaVelocidade(aliens);  
+                        //Verificar se estou no último alien
+                        if(aliens.size() != 2)
+                            Invasor.aumentaVelocidade();  //Aumentar a velocidade dos aliens
+                        else
+                        {
+                            //Se com este abate restar apenas mais um alien
+                            Invasor.aumentaVelocidadeUltimo(5);
+                        }
                     }
                 }
             }
@@ -229,26 +229,23 @@ public class Engine {
             remove_tiro.clear();
         }
         
-        /************ Verificar colisões dos tiros dos Aliens *****************/
+        /******* Verificar colisões dos tiros dos Aliens com o Player ********/
         for(i = 0; i < tiroAlien.size(); i++)
         {
             aux_tiro = tiroAlien.get(i);
-            
             if(aux_tiro.move(tamY))
             {
                 if(verifica_colisao(player, tiroAlien.get(i)))
                 {
                     player.removeVida();
+                    
+                    //Voltar o jogador para a origem
                     player.setPos(tamX - 50, 300);
                     
                     remove_tiro.add(aux_tiro);
                     
-                    /*
-                    PauseTransition pause = new PauseTransition(Duration.seconds(1));
-                    pause.setOnFinished(event ->
-                        label.setText("Finished: 1 second elapsed");
-                    );  
-                    pause.play();*/
+                    //Mostrar a mesagem de antingido
+                    atingido = true;
                 }
             }
             else
@@ -303,13 +300,16 @@ public class Engine {
             
             for(j = 0; j < barreiras.size(); j++)
             {
-                if(verifica_colisao(aux_tiro, barreiras.get(j)))
+                aux_barreira = barreiras.get(j);
+                if(verifica_colisao(aux_tiro,aux_barreira))
                 {
                     //Marca o tiro para remoção
                     remove_tiro.add(aux_tiro);
                     
                     //Remove uma vida
-                    barreiras.get(j).removeVida();
+                    if(!aux_barreira.removeVida())
+                        remove_bar.add(aux_barreira);
+                    
                 }
             }
         }
@@ -329,13 +329,16 @@ public class Engine {
             
             for(j = 0; j < barreiras.size(); j++)
             {
-                if(verifica_colisao(aux_tiro, barreiras.get(j)))
+                aux_barreira = barreiras.get(j);
+                if(verifica_colisao(aux_tiro,aux_barreira))
                 {
                     //Marca o tiro para remoção
                     remove_tiro.add(aux_tiro);
                     
                     //Remove uma vida
-                    barreiras.get(j).removeVida();
+                    if(!aux_barreira.removeVida())
+                        remove_bar.add(aux_barreira);
+                    
                 }
             }
         }
@@ -374,84 +377,10 @@ public class Engine {
     }
     
     /**
-     * Método que gera os tiros dos alienígenas
-     */
-    private void gera_tiro_alien()
-    {
-        //Variáveis auxiliares
-        Invasor aux_inv;
-        int i;
-        boolean gerou = false;
-        
-        //Quero gerar os tiros com uma certa aleatoriedade na cadencia
-        int valor = (int) Math.floor(Math.random() * 501) + 1500; 
-        Image img = new Image("Imagens/tiro.png", 3, 20, false, false);
-        
-        if(System.currentTimeMillis() - tempo_tiro_alien > valor)
-        {
-            //Gerar um tiro na coluna do jogador
-            for(i = 0 ; i < aliens.size() && !gerou; i++)
-            {
-                aux_inv = aliens.get(i);
-                if(Math.abs(aux_inv.x - player.x) < 10.0)
-                {
-                    //Se o alien estiver suficientemente proximo do jogador
-                    tiroAlien.add(new Tiro(aux_inv.x + (aux_inv.largura)/2, 
-                            aux_inv.y + aux_inv.altura/2 , 3, 20, 1, 4, 0, img));
-                    gerou = true;
-                }
-            }
-            
-            //Gerar um tiro aleatório!
-            valor = (int) Math.floor(Math.random() * (aliens.size()));
-            aux_inv = aliens.get(valor);
-            tiroAlien.add(new Tiro(aux_inv.x + (aux_inv.largura)/2, 
-                            aux_inv.y + aux_inv.altura/2 , 3, 20, 1, 4, 0, img));
-            
-            //Significa que não foi possível atirar perto do jogador
-            if(!gerou)
-            {
-                //Gerar mais um tiro aleatório
-                valor = (int) Math.floor(Math.random() * (aliens.size()));
-                aux_inv = aliens.get(valor);
-                tiroAlien.add(new Tiro(aux_inv.x + (aux_inv.largura)/2, 
-                            aux_inv.y + aux_inv.altura/2 , 3, 20, 1, 4, 0, img));
-            }
-            
-            tempo_tiro_alien = System.currentTimeMillis();
-        }
-    }
-    
-    /**
-     * Método que verifica o estado das barreiras, mudando imagens se necessário
-     */
-    private void verifica_barreiras()
-    {
-        Barreira aux;
-        int i;
-        
-        for(i = 0; i < barreiras.size(); i++)
-        {
-            aux = barreiras.get(i);
-            
-            //Se a barreira estiver marcada como morta            
-            if(!aux.esta_vivo())
-            {
-                barreiras.remove(aux);
-            }
-            //Verificar as vidas e atualizar a imagem
-            else if(aux.getVidas() >= 4 && aux.getVidas() <= 6 )
-                aux.setImagem(new Image("Imagens/barreira1.png", 100, 50, false, false));
-            else if(aux.getVidas() >= 1 && aux.getVidas() <= 3  )
-                aux.setImagem(new Image("Imagens/barreira2.png", 100, 50, false, false));
-        }
-    }
-    
-    /**
      * Método que processa os movimentos do jogador contidos na lista de teclas
      * @param tamX int - Número de colunas da telinha
      */
-    private void  processa_movimento_jogador(int tamX)
+    private void processa_movimento_jogador(int tamX)
     {
         if(entradas.contains(KeyCode.LEFT) && player.x > 0)
         {
@@ -468,6 +397,42 @@ public class Engine {
     }
     
     /**
+     * Método que gera os tiros dos alienígenas
+     */
+    private void gera_tiro_alien()
+    {
+        //Variáveis auxiliares
+        Invasor aux_inv;
+        
+        //Quero gerar os tiros com uma certa aleatoriedade na cadencia
+        int valor = (int) Math.floor(Math.random() * 301) + 1500; 
+        Image img = new Image("Imagens/tiro.png", 3, 20, false, false);
+        
+        if(System.currentTimeMillis() - tempo_tiro_alien > valor)
+        {
+            //Ordenar o vetor de acordo com a posição X dos aliens em relação ao player
+            Collections.sort(aliens, new Comparador(player.x));
+            
+            //Selecionar o alien mais perto do jogador e gerar um tiro nele!
+            aux_inv = aliens.get(0);
+            tiroAlien.add(new Tiro(aux_inv.x + (aux_inv.largura)/2, 
+                            aux_inv.y + aux_inv.altura/2 , 3, 20, 1, 5, 0, img));
+            
+            //Gerar um tiro aleatório!
+            valor = (int) Math.floor(Math.random() * (aliens.size()));
+            aux_inv = aliens.get(valor);
+            tiroAlien.add(new Tiro(aux_inv.x + (aux_inv.largura)/2, 
+                            aux_inv.y + aux_inv.altura/2 , 3, 20, 1, 5, 0, img));
+            
+            //Resetar o temporizador de tiros de aliens
+            tempo_tiro_alien = System.currentTimeMillis();
+            
+            //Aumentar a aleatoriedade
+            Collections.shuffle(aliens); 
+        }
+    }
+    
+    /**
      * Método que verifica a colisão entre dois elementos
      * @param a Elemento - Elemento cuja intersecção será testada
      * @param b Elemento - Elemento cuja intersecção será testada
@@ -478,10 +443,7 @@ public class Engine {
         Rectangle2D elem_A = new Rectangle2D(a.x, a.y - a.altura, a.largura, a.altura);
         Rectangle2D elem_B = new Rectangle2D(b.x, b.y - b.altura, b.largura, b.altura);
         
-        if(elem_A.intersects(elem_B))
-            return true;
-        else
-            return false;   
+        return elem_A.intersects(elem_B);
     }
     
     /**
@@ -489,11 +451,13 @@ public class Engine {
      */
     public void criaTiro_player()
     {
-        if(System.currentTimeMillis() - tempo_tiro_player > 800)
+        if(System.currentTimeMillis() - tempo_tiro_player > 1000)
         {
             tiroPlayer.add(new Tiro(player.x + (player.largura)/2 - 5, 
-                    player.y - player.altura/2 , 3, 20, 1, 6, 1,
+                    player.y - player.altura/2 , 3, 20, 1, 8, 1,
                     new Image("Imagens/tiro.png", 3, 20, false, false)));
+            
+            //Resetar o temporizador de tiro do player
             tempo_tiro_player = System.currentTimeMillis();
         }
     }

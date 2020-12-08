@@ -8,16 +8,17 @@ package Elementos;
 import javafx.scene.image.Image;
 
 /**
- *
- * @author marco
+ * Classe abstrada que serve como molde de todos os elementos do jogo
+ * @author Marcos Pietrucci
+ * @since dec 2020
  */
 public abstract class Elemento {
     
     public int altura, largura;
     public double x, y;
-    private boolean vivo = true;
-    private Image imagem;
-    private int vidas;
+    protected boolean vivo = true;
+    protected Image imagem;
+    protected int vidas;
    
     Elemento(double x, double y, int largura, int altura, int vidas , Image imagem)
     {
@@ -78,13 +79,16 @@ public abstract class Elemento {
     
     /**
      * Método que remove uma vida deste elemento
+     * @return boolean - True se o elemento está vivo, false se está morto
      */
-    public void removeVida()
+    public boolean removeVida()
     {
         this.vidas--;
         
         if(this.vidas == 0)
             this.vivo = false;
+    
+        return this.vivo;
     }
     
     /**

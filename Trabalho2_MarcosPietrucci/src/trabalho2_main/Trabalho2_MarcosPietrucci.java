@@ -7,19 +7,20 @@ package trabalho2_main;
 import Interface_Gráfica.TelaJogo;
 
 /**
- *
- * @author marco
+ * Classe main, que apenas incia o jogo ativando a TelaJogo
+ * @author Marcos Pietrucci
+ * @since dec 2020
  */
 public class Trabalho2_MarcosPietrucci {
 
     /**
-     * @param args the command line arguments
+     * Main, basicamente inicia o programa
+     * @param args 
      */
     public static void main(String[] args) {
         
-        TelaJogo tela = new TelaJogo();
-        
-        tela.launch("Teste");
+        //Inicia o jogo
+        TelaJogo.launch();
         
     }
     

@@ -1,15 +1,11 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package Elementos;
 
 import javafx.scene.image.Image;
 
 /**
- *
- * @author marco
+ * Classe que define os tiros do jogo
+ * @author Marcos Pietrucci
+ * @since dec 2020
  */
 public class Tiro extends Elemento{
     
@@ -23,9 +19,15 @@ public class Tiro extends Elemento{
         this.velocidade = velocidade;
         this.origem = origem;
     }
-
+    
+    /**
+     * Método que move o tiro
+     * @param tamY int - Número de linhas da telinha
+     * @return boolean - Retorna true para tiros válidos, false para inválidos
+     */
     public boolean move(int tamY)
     {
+        //Verificar a origem do tiro
         if(origem == 1)
         {
             if(this.y > 0)
