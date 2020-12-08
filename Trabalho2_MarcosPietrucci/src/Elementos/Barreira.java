@@ -13,7 +13,8 @@ import javafx.scene.image.Image;
  */
 public class Barreira extends Elemento{
     
-    public Barreira(double x, double y, int largura, int altura, int vidas, Image imagem) {
+    public Barreira(double x, double y, int largura, int altura, int vidas, Image imagem) 
+    {
         super(x, y, largura, altura, vidas, imagem);
     }
 

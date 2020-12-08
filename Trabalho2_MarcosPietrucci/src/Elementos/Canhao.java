@@ -15,28 +15,28 @@ import javafx.scene.input.KeyEvent;
 public class Canhao extends Elemento{
     
     private final int velocidade;
+    private int pontos;
    
     public Canhao(double x, double y, int largura, int altura, int vidas,
                   int velocidade, Image imagem)
     {
         super(x, y, largura, altura, vidas, imagem);
         this.velocidade = velocidade;
-    }
-    
-    public void move(KeyEvent e)
-    {
-        switch(e.getCode())
-        {
-            case LEFT:  this.x -= this.velocidade;
-                        break;
-                            
-            case RIGHT: this.x += this.velocidade;
-                        break;           
-        }   
+        this.pontos = 0;
     }
     
     public int getVelocidade()
     {
         return this.velocidade;
+    }
+    
+    public int getPontos()
+    {
+        return this.pontos;
+    }
+    
+    public void ganhaPontos()
+    {
+        this.pontos += 10;
     }
 }

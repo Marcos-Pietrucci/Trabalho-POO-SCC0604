@@ -24,7 +24,7 @@ public class Invasor extends Elemento{
         super(x, y, largura, altura, vidas, imagem);
         Invasor.direcao = 0;
         Invasor.descer = 0;
-        Invasor.velocidade = 0.5;
+        Invasor.velocidade = 0.2;
     }
     
      /**
@@ -78,7 +78,7 @@ public class Invasor extends Elemento{
     {   
         if(Invasor.descer == 1)
         {
-            this.y+=5;
+            this.y += 20;
         }
         else
         {
@@ -115,7 +115,7 @@ public class Invasor extends Elemento{
     public static void aumentaVelocidade(ArrayList<Invasor> invaders)
     {
         //O número original dos aliens é 55        
-        Invasor.velocidade += 0.05;
+        Invasor.velocidade += 0.025;
     }
 
 }

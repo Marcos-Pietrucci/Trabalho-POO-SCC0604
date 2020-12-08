@@ -13,14 +13,12 @@ import javafx.scene.image.Image;
  */
 public abstract class Elemento {
     
-    public double x, y;
-    public boolean vivo = true;
-    public Image imagem;
     public int altura, largura;
-    protected int vidas;
-    
-    
-    
+    public double x, y;
+    private boolean vivo = true;
+    private Image imagem;
+    private int vidas;
+   
     Elemento(double x, double y, int largura, int altura, int vidas , Image imagem)
     {
         this.x = x;
@@ -32,11 +30,29 @@ public abstract class Elemento {
     }
     
     /**
+     * Método que retorna a imagem do elemento
+     * @return imagem Image - Imagem do elemento
+     */
+    public Image getImagem()
+    {
+        return this.imagem;
+    }
+    
+    /**
+     * Método que define a imagem de um elemento
+     * @param img Image - Nova imagem do elemento
+     */
+    public void setImagem(Image img)
+    {
+        this.imagem = img;
+    }
+    
+    /**
      * Método que seta a atual posição do elemento
      * @param x int - Posição X do elemento na matriz da tela 
      * @param y int - Posição Y do elemento na matriz da tela
      */
-    public final void setPos(int x, int y)
+    public void setPos(double x, double y)
     {
         this.x = x;
         this.x = y;
@@ -46,7 +62,7 @@ public abstract class Elemento {
      * Método que retorna a quantidade de vidas do elemento
      * @return vidas int - Quantidade de vidas restantes
      */
-    protected int getVidas()
+    public int getVidas()
     {
         return this.vidas;
     }
